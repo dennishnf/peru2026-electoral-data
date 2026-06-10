@@ -4,6 +4,10 @@ A small web page to follow the ONPE vote count for Peru's 2026 presidential runo
 
 I built it so I could see how the count changes minute by minute in the days following the election, without reloading the official site over and over. It started out as a quick project that I developed in less than an hour.
 
+## Live demo
+
+A live version using a custom domain is available at **[peru2026.dennishnf.com](https://peru2026.dennishnf.com/)** — note that it is only active during the election counting period.
+
 ## What it shows
 
 Three charts that share the same time axis:
@@ -57,4 +61,4 @@ If you have a domain on Cloudflare you can use a named tunnel and keep a fixed a
 
 ## Notes
 
-The data comes from ONPE's public API and its format can change without notice. The page refreshes on its own every couple of minutes, so there is no need to reload. It is meant to run on a laptop during election night.
+The data comes from ONPE's public API and its format can change without notice. The page refreshes on its own every couple of minutes, so there is no need to reload. It is meant to run on a laptop during election days.
