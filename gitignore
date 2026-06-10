@@ -1,0 +1,13 @@
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Datos generados al correr el tracker
+onpe_historial.json
+logs/
+*.log
+
+# Archivos de entorno
+.venv/
+venv/
+.env

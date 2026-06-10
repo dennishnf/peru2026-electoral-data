@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONPE - Segunda Vuelta 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0E1116; --grid:#272C36; --fg:#C9D1D9; --fg2:#8B949E; --title:#F0F6FC;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--fg);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:14px 18px 4px;
+    display:flex;flex-direction:column;height:100vh;overflow:hidden}
+  h1,.live,.tabs,.foot{flex:0 0 auto}
+  h1{font-size:18px;color:var(--title);font-weight:700;margin:2px 0 10px;
+    text-align:center;line-height:1.3}
+  .tabs{display:flex;gap:8px;justify-content:center;margin:0 0 14px;flex-wrap:wrap}
+  .tab{background:#161B22;border:1px solid #30363D;color:var(--fg);
+    font-size:13px;padding:6px 14px;border-radius:8px;cursor:pointer;
+    transition:border-color .12s,background .12s}
+  .tab:hover{border-color:#58A6FF}
+  .tab.active{background:#1F6FEB;border-color:#1F6FEB;color:#fff;font-weight:600}
+  .panel{position:relative;width:100%;min-height:0;margin-top:26px}
+  .p1{flex:1.5 1 0;margin-top:14px} .p2{flex:1 1 0} .p3{flex:1.5 1 0}
+  .legend{position:absolute;left:78px;top:10px;z-index:5;font-size:12px;
+    line-height:1.55;pointer-events:none}
+  .legend .row{display:flex;align-items:center;gap:7px;color:var(--fg)}
+  .swatch{display:inline-block;width:22px;height:0;border-top-width:3px;
+    border-top-style:solid}
+  .swbox{display:inline-block;width:13px;height:13px;border-radius:2px}
+  .foot{font-size:11px;color:var(--fg2);margin-top:14px;text-align:center}
+
+  /* Etiquetas finales en HTML: ocultas en escritorio, visibles en móvil */
+  .cap{display:none}
+  @media (max-width:640px){
+    .wrap{display:block;height:auto;overflow:visible;padding:10px 10px 8px}
+    h1{font-size:15px;margin-bottom:8px}
+    .tabs{gap:6px;margin-bottom:10px}
+    .tab{font-size:12px;padding:5px 10px}
+    .p1{height:300px;margin-top:24px} .p2{height:170px} .p3{height:200px}
+    .legend{left:76px;top:6px;font-size:11px;line-height:1.45}
+    .legend .swatch{width:16px}
+    .cap{display:block;font-size:13px;color:var(--fg);
+      margin:2px 6px 14px;text-align:right;line-height:1.5}
+    .cap b{font-weight:700}
+  }
+  .live{display:flex;align-items:center;justify-content:center;gap:7px;
+    font-size:12px;color:var(--fg2);margin:-4px 0 10px}
+  .live .ldot{width:8px;height:8px;border-radius:50%;background:#2EA043;
+    flex:0 0 auto;animation:pulso 2s infinite}
+  @keyframes pulso{
+    0%{box-shadow:0 0 0 0 rgba(46,160,67,.55)}
+    70%{box-shadow:0 0 0 6px rgba(46,160,67,0)}
+    100%{box-shadow:0 0 0 0 rgba(46,160,67,0)}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 id="titulo">Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE</h1>
+    <div class="live"><span class="ldot"></span> En vivo - actualización automática con datos de la ONPE</div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-v="12h">Últimas 12 h</button>
+      <button class="tab"        data-v="24h">Últimas 24 h</button>
+      <button class="tab"        data-v="3d">Últimos 3 días</button>
+    </div>
+
+    <div class="panel p1"><div class="legend" id="leg1"></div><canvas id="c1"></canvas></div>
+    <div class="cap" id="cap1"></div>
+    <div class="panel p2"><div class="legend" id="leg2"></div><canvas id="c2"></canvas></div>
+    <div class="cap" id="cap2"></div>
+    <div class="panel p3"><div class="legend" id="leg3"></div><canvas id="c3"></canvas></div>
+    <div class="cap" id="cap3"></div>
+
+    <div class="foot" id="foot">Cargando…</div>
+  </div>
+
+<script>
+const API = "/api/datos";
+const GRID = "#272C36", FG2 = "#8B949E", GRAY = "#6E7681";
+const TZ = "America/Lima";          // hora de Perú (UTC-5)
+
+/* Vistas disponibles: ventana de tiempo + resolución (minutos por punto) */
+const VISTAS = {
+  "12h": { horas: 12, resMin: 5  },
+  "24h": { horas: 24, resMin: 10 },
+  "3d":  { horas: 72, resMin: 30 },
+};
+let vistaActual = "12h";
+let ultimoPayload = null;
+const charts = {};
+
+/* ---- Plugin: etiquetas al final de cada línea ---- */
+const endLabels = {
+  id: "endLabels",
+  afterDatasetsDraw(chart){
+    const items = chart.$endLabels || [];
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.font = "700 12.5px system-ui, sans-serif";
+    ctx.textBaseline = "middle";
+    items.forEach(it => {
+      const meta = chart.getDatasetMeta(it.ds);
+      if (!meta || !meta.data || !meta.data.length) return;
+      let el = null;
+      for (let k = meta.data.length - 1; k >= 0; k--){
+        const e = meta.data[k];
+        if (e && isFinite(e.y)) { el = e; break; }
+      }
+      if (!el) return;
+      ctx.fillStyle = it.color;
+      ctx.fillText(it.text, el.x + 9, el.y);
+    });
+    ctx.restore();
+  }
+};
+Chart.register(endLabels);
+
+/* ---- Utilidades de hora (todas en hora de Perú) ---- */
+function hhmm(iso){
+  return new Date(iso).toLocaleTimeString("es-PE",
+    { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false });
+}
+function ddmm(iso){
+  return new Date(iso).toLocaleDateString("es-PE",
+    { timeZone: TZ, day: "2-digit", month: "2-digit" });
+}
+function fechaHoraPeru(iso){
+  return new Date(iso).toLocaleString("es-PE", { timeZone: TZ });
+}
+function principales(d){
+  let a = d.candidatos.find(n => (d.colores[n]||"").toUpperCase() === "#F4720B");
+  let b = d.candidatos.find(n => (d.colores[n]||"").toUpperCase() === "#2EA043");
+  if (!a) a = d.candidatos[0];
+  if (!b) b = d.candidatos[1];
+  return [a, b];
+}
+function nice(v, step){ return Math.ceil(v/step)*step; }
+
+/* Remuestrea a `resMin` minutos por punto: agrupa en franjas de tiempo
+   y se queda con el último punto de cada franja (sobre todo el historial). */
+function remuestrear(t, sa, sb, resMin){
+  const slot = resMin * 60 * 1000;
+  const T = [], SA = [], SB = [];
+  let curB = null;
+  for (let i = 0; i < t.length; i++){
+    const b = Math.floor(new Date(t[i]).getTime() / slot);
+    if (b !== curB){ curB = b; T.push(t[i]); SA.push(sa[i]); SB.push(sb[i]); }
+    else { const j = T.length - 1; T[j] = t[i]; SA[j] = sa[i]; SB[j] = sb[i]; }
+  }
+  return { t: T, sa: SA, sb: SB };
+}
+
+function baseOpts(yTitle, yScale, showX, xTitle, padRight){
+  const esMovil = window.innerWidth <= 640;
+  return {
+    responsive:true, maintainAspectRatio:false, animation:false,
+    events: esMovil ? [] : undefined,   // móvil: sin tooltip al tocar; PC: normal
+    layout:{ padding:{ left:2, right:(padRight==null?150:padRight), top:6, bottom:2 } },
+    interaction:{ mode:"index", intersect:false },
+    scales:{
+      x:{
+        grid:{ color:GRID }, border:{ color:GRID },
+        ticks:{ display:showX, color:FG2, maxTicksLimit:12, maxRotation:0, autoSkip:true },
+        title:{ display:!!xTitle, text:xTitle||"", color:FG2, font:{size:12} },
+      },
+      y:Object.assign({
+        grid:{ color:GRID }, border:{ color:GRID },
+        title:{ display:true, text:yTitle, color:FG2, font:{size:12}, padding:{right:4} },
+        ticks:{ padding:2 },
+        afterFit(s){ s.width = 72; },   // ancho fijo => los 3 paneles se alinean
+      }, yScale),
+    },
+    plugins:{ legend:{ display:false } },
+  };
+}
+function upsert(id, type, data, options, endLabelsArr){
+  const labels = endLabelsArr || [];
+  if (!charts[id]){
+    charts[id] = new Chart(document.getElementById(id), {type, data, options});
+    charts[id].$endLabels = labels;
+    charts[id].update("none");        // re-dibuja ya con las etiquetas finales
+  } else {
+    const c = charts[id];
+    c.$endLabels = labels;            // asignar ANTES del update
+    c.data = data; c.options = options; c.update("none");
+  }
+}
+function legendHTML(el, rows){
+  el.innerHTML = rows.map(r =>
+    r.dash
+      ? `<div class="row"><span class="swatch" style="border-top-style:dashed;border-top-color:${r.color}"></span>${r.txt}</div>`
+      : r.box
+        ? `<div class="row"><span class="swbox" style="background:${r.color}"></span>${r.txt}</div>`
+        : `<div class="row"><span class="swatch" style="border-top-color:${r.color}"></span>${r.txt}</div>`
+  ).join("");
+}
+
+/* ---- Render principal ---- */
+function render(d){
+  const V = VISTAS[vistaActual] || VISTAS["12h"];
+  const [A, B] = principales(d);
+  const colA = d.colores[A] || "#F4720B";   // FUERZA POPULAR
+  const colB = d.colores[B] || "#2EA043";   // JUNTOS POR EL PERÚ
+  const esMovil = window.innerWidth <= 640;
+  const PAD_R = esMovil ? 14 : 78;           // escritorio: margen der. ≈ ancho del eje Y izq. → dibujo centrado
+
+  /* 1) Remuestreo a la resolución de la vista (sobre todo el historial) */
+  const rs = remuestrear(d.tiempos, d.series[A] || [], d.series[B] || [], V.resMin);
+  const tF = rs.t, saF = rs.sa, sbF = rs.sb;
+  const nFull = tF.length;
+
+  /* 2) diferencia + color del líder (serie remuestreada completa) */
+  const diffF = [], leadF = [];
+  for (let i = 0; i < nFull; i++){
+    if (saF[i] != null && sbF[i] != null){
+      diffF[i] = +Math.abs(saF[i] - sbF[i]).toFixed(4);
+      leadF[i] = saF[i] >= sbF[i] ? colA : colB;
+    } else { diffF[i] = null; leadF[i] = GRAY; }
+  }
+  /* delta de la diferencia + quién subió */
+  const deltaF = [], dcolF = [];
+  deltaF[0] = 0; dcolF[0] = GRAY;
+  for (let i = 1; i < nFull; i++){
+    if (saF[i]!=null && sbF[i]!=null && saF[i-1]!=null && sbF[i-1]!=null){
+      deltaF[i] = +Math.abs(diffF[i] - diffF[i-1]).toFixed(4);
+      const gFP = saF[i]-saF[i-1], gJ = sbF[i]-sbF[i-1];
+      dcolF[i] = gFP > gJ ? colA : (gFP < gJ ? colB : GRAY);
+    } else { deltaF[i] = null; dcolF[i] = GRAY; }
+  }
+
+  /* 3) Ventana: solo las últimas V.horas */
+  const tMs    = tF.map(s => new Date(s).getTime());
+  const lastMs = tMs.length ? tMs[tMs.length - 1] : 0;
+  const corte  = lastMs - V.horas * 3600 * 1000;
+  let start = 0;
+  for (let i = 0; i < nFull; i++){ if (tMs[i] >= corte){ start = i; break; } }
+
+  const sl = arr => arr.slice(start);
+  const tWin      = tF.slice(start);
+  const labels    = tWin.map(iso => [hhmm(iso), ddmm(iso)]);   // dos líneas: hora + fecha
+  const sa        = sl(saF),  sb        = sl(sbF);
+  const diff      = sl(diffF), leaderCol = sl(leadF);
+  const delta     = sl(deltaF), deltaCol = sl(dcolF);
+  const n  = labels.length;
+  const pr = n > 220 ? 1.1 : (n > 120 ? 1.8 : 2.4);
+
+  /* último punto válido dentro de la ventana */
+  const li = (()=>{ for(let i=n-1;i>=0;i--) if(sa[i]!=null&&sb[i]!=null) return i; return n-1; })();
+  const lider    = sa[li] >= sb[li] ? A : B;
+  const colLider = sa[li] >= sb[li] ? colA : colB;
+
+  /* título del tooltip: fecha + hora de Perú */
+  const tipTitle = items => {
+    const i = items[0].dataIndex;
+    return tWin[i] ? `${ddmm(tWin[i])}  ${hhmm(tWin[i])}` : "";
+  };
+
+  /* ===== Panel 1: % votos válidos ===== */
+  const vals = [...sa, ...sb, 50].filter(x => x != null);
+  // Ventana fija ~49.8–50.2; se amplía sola SOLO si los datos se salen de ese rango.
+  let lo = Math.min(49.8, Math.floor(Math.min(...vals) * 10) / 10);
+  let hi = Math.max(50.2, Math.ceil (Math.max(...vals) * 10) / 10);
+  const ds1 = [
+    { label:A, data:sa, borderColor:colA, backgroundColor:colA,
+      borderWidth:2.4, pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true },
+    { label:B, data:sb, borderColor:colB, backgroundColor:colB,
+      borderWidth:2.4, pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true },
+    { label:"50%", data:labels.map(()=>50), borderColor:"#8B949E",
+      borderDash:[6,4], borderWidth:1.3, pointRadius:0, tension:0, fill:false },
+  ];
+  const o1 = baseOpts("% Votos válidos",
+    { min:lo, max:hi, ticks:{ color:FG2, callback:v=>v.toFixed(2)+"%", padding:2 } }, false, null, PAD_R);
+  o1.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(3)}%` } };
+  upsert("c1", "line", {labels, datasets:ds1}, o1, esMovil ? [] : [
+    { ds:0, text:(sa[li]!=null?sa[li].toFixed(3):"")+"%", color:colA },
+    { ds:1, text:(sb[li]!=null?sb[li].toFixed(3):"")+"%", color:colB },
+  ]);
+
+  /* ===== Diferencia (línea) — se dibuja abajo, en c3 ===== */
+  const maxDiff = Math.max(0.1, ...diff.filter(x=>x!=null));
+  const ds2 = [{
+    label:"Diferencia", data:diff,
+    borderColor:colLider, borderWidth:2.4,
+    pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true,
+    fill:"origin", backgroundColor:"rgba(120,134,140,0.16)",
+    segment:{ borderColor: ctx => leaderCol[ctx.p1DataIndex] || colLider },
+  }];
+  const o2 = baseOpts("|Diferencia| (pp)",
+    { min:0, max:nice(maxDiff*1.6, 0.1), ticks:{ color:FG2, stepSize:0.1, callback:v=>v.toFixed(3), padding:2 } },
+    true, "Hora (UTC-5, hora de Perú)", PAD_R);
+  o2.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${c.parsed.y?.toFixed(3)} pp` } };
+  upsert("c3", "line", {labels, datasets:ds2}, o2, esMovil ? [] : [
+    { ds:0, text:`${diff[li]!=null?diff[li].toFixed(3):""} pp`, color:colLider },
+  ]);
+
+  /* ===== Aumento (barras) — se dibuja al medio, en c2 ===== */
+  const maxDelta = Math.max(0.01, ...delta.filter(x=>x!=null));
+  const ds3 = [{
+    label:"Δ", data:delta,
+    backgroundColor:deltaCol, borderColor:deltaCol,
+    borderWidth:0, barPercentage:1.0, categoryPercentage:0.9,
+  }];
+  const lastDelta = delta[li] != null ? delta[li] : 0;
+  let etqDelta, colDelta;
+  if (lastDelta < 0.0005){ etqDelta = `0.00 pp`; colDelta = GRAY; }
+  else { etqDelta = `${lastDelta.toFixed(2)} pp`; colDelta = deltaCol[li]; }
+  const o3 = baseOpts("|Aumento| (pp)",
+    { min:0, max:nice(maxDelta*1.35, 0.005), ticks:{ color:FG2, callback:v=>v.toFixed(3), padding:2 } },
+    false, null, PAD_R);
+  o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` Aumento ${c.parsed.y?.toFixed(4)} pp` } };
+  upsert("c2", "bar", {labels, datasets:ds3}, o3, esMovil ? [] : [
+    { ds:0, text:etqDelta, color:colDelta },
+  ]);
+
+  /* ===== Leyendas ===== */
+  legendHTML(document.getElementById("leg1"), [
+    { color:colA, txt:A }, { color:colB, txt:B },
+  ]);
+  legendHTML(document.getElementById("leg3"), [
+    { color:colA, txt:`${A} adelante`, box:true },
+    { color:colB, txt:`${B} adelante`, box:true },
+  ]);
+  legendHTML(document.getElementById("leg2"), [
+    { color:colA, txt:`Subió ${A}`, box:true },
+    { color:colB, txt:`Subió ${B}`, box:true },
+  ]);
+
+  /* ===== Título y pie ===== */
+  const a = d.actas || {};
+  const pct = (a.pct && a.pct.length) ? a.pct[a.pct.length-1] : null;
+  document.getElementById("titulo").textContent =
+    pct != null
+      ? `Elecciones Perú 2026 - Segunda Vuelta - Evolución ONPE al ${pct.toFixed(2)}%`
+      : "Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE";
+  const credits = ` | Hecho por <a href="https://dennishnf.com" target="_blank" style="color:var(--fg2);text-decoration:underline">Dennis Núñez</a> | <a href="https://github.com/dennishnf/peru2026-electoral-data" target="_blank" style="color:var(--fg2);text-decoration:underline">GitHub Repo</a>`;
+  document.getElementById("foot").innerHTML =
+    d.actualizado
+      ? `Última actualización: ${fechaHoraPeru(d.actualizado)} (hora de Perú)  |  Fuente: <a href="https://resultadosegundavuelta.onpe.gob.pe/main/resumen" target="_blank" style="color:var(--fg2);text-decoration:underline">ONPE</a>${credits}`
+      : `Esperando el primer dato…${credits}`;
+
+  /* ===== En móvil: etiquetas finales en HTML (se ven enteras) ===== */
+  if (esMovil){
+    const f3 = x => (x != null ? x.toFixed(3) : "–");
+    document.getElementById("cap1").innerHTML =
+      `<div><b style="color:${colB}">${B}</b> ${f3(sb[li])}%</div>` +
+      `<div><b style="color:${colA}">${A}</b> ${f3(sa[li])}%</div>`;
+    document.getElementById("cap2").innerHTML =
+      `<b style="color:${colDelta}">${etqDelta}</b>`;
+    document.getElementById("cap3").innerHTML =
+      `<b style="color:${colLider}">${f3(diff[li])} pp</b>`;
+  }
+}
+
+/* ---- Selector de vista ---- */
+document.getElementById("tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab");
+  if (!b) return;
+  vistaActual = b.dataset.v;
+  document.querySelectorAll("#tabs .tab").forEach(x => x.classList.toggle("active", x === b));
+  if (ultimoPayload) render(ultimoPayload);   // re-dibuja al instante, sin re-consultar
+});
+
+/* Re-dibuja al girar el teléfono o cambiar el tamaño (alterna móvil/escritorio) */
+let _resizeT;
+window.addEventListener("resize", () => {
+  clearTimeout(_resizeT);
+  _resizeT = setTimeout(() => { if (ultimoPayload) render(ultimoPayload); }, 200);
+});
+
+async function cargar(){
+  try{
+    const r = await fetch(API, {cache:"no-store"});
+    const d = await r.json();
+    if (d && d.tiempos && d.tiempos.length){ ultimoPayload = d; render(d); }
+    else document.getElementById("foot").textContent = "Esperando el primer dato del conteo…";
+  }catch(e){
+    document.getElementById("foot").textContent = "Sin conexión con el servidor.";
+  }
+}
+
+cargar();
+setInterval(cargar, 120000);   // refresca cada 2 minutos
+
+/* Cuando la pestaña vuelve a primer plano (estaba en segundo plano y el
+   navegador pausó el temporizador), jala datos al instante sin esperar
+   al próximo ciclo. */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") cargar();
+});
+</script>
+</body>
+</html>
