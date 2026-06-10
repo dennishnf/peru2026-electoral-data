@@ -11518,5 +11518,25 @@
     "pct_actas": 97.366,
     "total_actas": 92766,
     "contabilizadas": 90323
+  },
+  {
+    "timestamp": "2026-06-10T16:35:00.554753",
+    "candidatos": [
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 8978095,
+        "porcentaje": 49.945
+      },
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 8997807,
+        "porcentaje": 50.055
+      }
+    ],
+    "pct_actas": 97.371,
+    "total_actas": 92766,
+    "contabilizadas": 90327
   }
 ]

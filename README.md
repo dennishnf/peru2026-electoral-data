@@ -62,3 +62,21 @@ If you have a domain on Cloudflare you can use a named tunnel and keep a fixed a
 ## Notes
 
 The data comes from ONPE's public API and its format can change without notice. The page refreshes on its own every couple of minutes, so there is no need to reload. It is meant to run on a laptop during election days.
+
+## Running with the custom URL
+
+This is how I run the live version on its own address. You need two terminals open at the same time, and the named tunnel and domain set up once beforehand on Cloudflare.
+
+In the first terminal, start the server:
+
+```
+python servidor_local.py
+```
+
+In the second terminal, start the named tunnel:
+
+```
+cloudflared tunnel run peru2026
+```
+
+Keep both terminals running. The server answers on port 8000 and the tunnel points peru2026.dennishnf.com to it. If you close either one the site goes down. Once the tunnel and the domain are set up, these two commands are all you need to bring it back up.
