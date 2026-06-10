@@ -65,10 +65,13 @@ def construir_payload(historial, intervalo):
 
     tiempos = [_a_peru_iso(e["timestamp"]) for e in historial]
     series = {n: [] for n in nombres}
+    votos = {n: [] for n in nombres}
     for e in historial:
         got = {c["nombre"]: c["porcentaje"] for c in e["candidatos"]}
+        got_v = {c["nombre"]: c.get("votos") for c in e["candidatos"]}
         for n in nombres:
             series[n].append(got.get(n))
+            votos[n].append(got_v.get(n))
 
     nombre_k = next((n for n in nombres if "FUJIMORI" in n.upper()
                      or "FUERZA POPULAR" in n.upper()), None)
@@ -101,6 +104,7 @@ def construir_payload(historial, intervalo):
         "colores":     colores,
         "tiempos":     tiempos,
         "series":      series,
+        "votos":       votos,
         "actas": {
             "pct":            pct_actas,
             "contabilizadas": ult.get("contabilizadas", 0),
@@ -193,7 +197,7 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     p = argparse.ArgumentParser(description="Servidor local del tracker ONPE")
     p.add_argument("--port",      type=int, default=8000)
-    p.add_argument("--intervalo", type=int, default=5,
+    p.add_argument("--intervalo", type=int, default=1,
                    help="Minutos entre consultas")
     p.add_argument("--historial", default="onpe_historial.json")
     args = p.parse_args()

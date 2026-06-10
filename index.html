@@ -141,19 +141,24 @@ function principales(d){
   return [a, b];
 }
 function nice(v, step){ return Math.ceil(v/step)*step; }
+function kFmt(v){
+  const a = Math.abs(v);
+  if (a >= 1000){ const x = v/1000; return (Number.isInteger(x) ? x : x.toFixed(1)) + "k"; }
+  return String(v);
+}
 
 /* Remuestrea a `resMin` minutos por punto: agrupa en franjas de tiempo
    y se queda con el último punto de cada franja (sobre todo el historial). */
-function remuestrear(t, sa, sb, resMin){
+function remuestrear(t, sa, sb, va, vb, resMin){
   const slot = resMin * 60 * 1000;
-  const T = [], SA = [], SB = [];
+  const T = [], SA = [], SB = [], VA = [], VB = [];
   let curB = null;
   for (let i = 0; i < t.length; i++){
     const b = Math.floor(new Date(t[i]).getTime() / slot);
-    if (b !== curB){ curB = b; T.push(t[i]); SA.push(sa[i]); SB.push(sb[i]); }
-    else { const j = T.length - 1; T[j] = t[i]; SA[j] = sa[i]; SB[j] = sb[i]; }
+    if (b !== curB){ curB = b; T.push(t[i]); SA.push(sa[i]); SB.push(sb[i]); VA.push(va[i]); VB.push(vb[i]); }
+    else { const j = T.length - 1; T[j] = t[i]; SA[j] = sa[i]; SB[j] = sb[i]; VA[j] = va[i]; VB[j] = vb[i]; }
   }
-  return { t: T, sa: SA, sb: SB };
+  return { t: T, sa: SA, sb: SB, va: VA, vb: VB };
 }
 
 function baseOpts(yTitle, yScale, showX, xTitle, padRight){
@@ -211,8 +216,9 @@ function render(d){
   const PAD_R = esMovil ? 14 : 78;           // escritorio: margen der. ≈ ancho del eje Y izq. → dibujo centrado
 
   /* 1) Remuestreo a la resolución de la vista (sobre todo el historial) */
-  const rs = remuestrear(d.tiempos, d.series[A] || [], d.series[B] || [], V.resMin);
-  const tF = rs.t, saF = rs.sa, sbF = rs.sb;
+  const rs = remuestrear(d.tiempos, d.series[A] || [], d.series[B] || [],
+                         (d.votos && d.votos[A]) || [], (d.votos && d.votos[B]) || [], V.resMin);
+  const tF = rs.t, saF = rs.sa, sbF = rs.sb, vaF = rs.va, vbF = rs.vb;
   const nFull = tF.length;
 
   /* 2) diferencia + color del líder (serie remuestreada completa) */
@@ -234,6 +240,12 @@ function render(d){
     } else { deltaF[i] = null; dcolF[i] = GRAY; }
   }
 
+  /* diferencia en votos (serie remuestreada completa) */
+  const diffVotosF = [];
+  for (let i = 0; i < nFull; i++){
+    diffVotosF[i] = (vaF[i] != null && vbF[i] != null) ? Math.abs(vaF[i] - vbF[i]) : null;
+  }
+
   /* 3) Ventana: solo las últimas V.horas */
   const tMs    = tF.map(s => new Date(s).getTime());
   const lastMs = tMs.length ? tMs[tMs.length - 1] : 0;
@@ -247,6 +259,7 @@ function render(d){
   const sa        = sl(saF),  sb        = sl(sbF);
   const diff      = sl(diffF), leaderCol = sl(leadF);
   const delta     = sl(deltaF), deltaCol = sl(dcolF);
+  const diffVotos = sl(diffVotosF);
   const n  = labels.length;
   const pr = n > 220 ? 1.1 : (n > 120 ? 1.8 : 2.4);
 
@@ -276,44 +289,65 @@ function render(d){
   ];
   const o1 = baseOpts("% Votos válidos",
     { min:lo, max:hi, ticks:{ color:FG2, callback:v=>v.toFixed(2)+"%", padding:2 } }, false, null, PAD_R);
-  o1.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(3)}%` } };
+  o1.plugins.tooltip = { filter: it => it.dataset.label !== "50%", callbacks:{ title:tipTitle, label:c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(3)}%` } };
   upsert("c1", "line", {labels, datasets:ds1}, o1, esMovil ? [] : [
     { ds:0, text:(sa[li]!=null?sa[li].toFixed(3):"")+"%", color:colA },
     { ds:1, text:(sb[li]!=null?sb[li].toFixed(3):"")+"%", color:colB },
   ]);
 
-  /* ===== Diferencia (línea) — se dibuja abajo, en c3 ===== */
-  const maxDiff = Math.max(0.1, ...diff.filter(x=>x!=null));
+  /* ===== Diferencia en votos (línea) — se dibuja abajo, en c3 ===== */
+  const maxV = Math.max(1, ...diffVotos.filter(x=>x!=null));
+  const magV = Math.pow(10, Math.floor(Math.log10(maxV)));
+  const topV = Math.ceil(maxV * 1.3 / magV) * magV;
   const ds2 = [{
-    label:"Diferencia", data:diff,
+    label:"Diferencia", data:diffVotos,
     borderColor:colLider, borderWidth:2.4,
     pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true,
     fill:"origin", backgroundColor:"rgba(120,134,140,0.16)",
     segment:{ borderColor: ctx => leaderCol[ctx.p1DataIndex] || colLider },
   }];
-  const o2 = baseOpts("|Diferencia| (pp)",
-    { min:0, max:nice(maxDiff*1.6, 0.1), ticks:{ color:FG2, stepSize:0.1, callback:v=>v.toFixed(3), padding:2 } },
+  const o2 = baseOpts("|Diferencia| (votos)",
+    { min:0, max:topV, ticks:{ color:FG2, callback:kFmt, padding:2 } },
     true, "Hora (UTC-5, hora de Perú)", PAD_R);
-  o2.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${c.parsed.y?.toFixed(3)} pp` } };
+  o2.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${kFmt(Math.round(c.parsed.y))} votos` } };
   upsert("c3", "line", {labels, datasets:ds2}, o2, esMovil ? [] : [
-    { ds:0, text:`${diff[li]!=null?diff[li].toFixed(3):""} pp`, color:colLider },
+    { ds:0, text:`${diffVotos[li]!=null?kFmt(Math.round(diffVotos[li])):""} votos`, color:colLider },
   ]);
 
   /* ===== Aumento (barras) — se dibuja al medio, en c2 ===== */
-  const maxDelta = Math.max(0.01, ...delta.filter(x=>x!=null));
+  /* delta en votos absolutos (|votos_a - votos_b| en t[i] vs t[i-1]) */
+  const deltaVotos = new Array(n).fill(null);
+  {
+    const vaW = sl(vaF), vbW = sl(vbF);
+    for (let i = 1; i < n; i++){
+      if (vaW[i]!=null && vbW[i]!=null && vaW[i-1]!=null && vbW[i-1]!=null){
+        const prevDiff = Math.abs(vaW[i-1] - vbW[i-1]);
+        const curDiff  = Math.abs(vaW[i]   - vbW[i]);
+        deltaVotos[i] = Math.round(Math.abs(curDiff - prevDiff));
+      }
+    }
+  }
+
+  const maxDeltaV = Math.max(1, ...deltaVotos.filter(x=>x!=null));
+  const lastDeltaV = deltaVotos[li] != null ? deltaVotos[li] : 0;
+  let etqDelta, colDelta;
+  if (lastDeltaV < 1){ etqDelta = `0 votos`; colDelta = GRAY; }
+  else { etqDelta = `${kFmt(lastDeltaV)} votos`; colDelta = deltaCol[li]; }
+
   const ds3 = [{
-    label:"Δ", data:delta,
+    label:"Δ", data:deltaVotos,
     backgroundColor:deltaCol, borderColor:deltaCol,
     borderWidth:0, barPercentage:1.0, categoryPercentage:0.9,
   }];
-  const lastDelta = delta[li] != null ? delta[li] : 0;
-  let etqDelta, colDelta;
-  if (lastDelta < 0.0005){ etqDelta = `0.00 pp`; colDelta = GRAY; }
-  else { etqDelta = `${lastDelta.toFixed(2)} pp`; colDelta = deltaCol[li]; }
-  const o3 = baseOpts("|Aumento| (pp)",
-    { min:0, max:nice(maxDelta*1.35, 0.005), ticks:{ color:FG2, callback:v=>v.toFixed(3), padding:2 } },
+  const magDV = Math.pow(10, Math.floor(Math.log10(maxDeltaV)));
+  const topDV = Math.ceil(maxDeltaV * 1.35 / magDV) * magDV;
+  const o3 = baseOpts("|Aumento| (votos)",
+    { min:0, max:topDV, ticks:{ color:FG2, callback:kFmt, padding:2 } },
     false, null, PAD_R);
-  o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` Aumento ${c.parsed.y?.toFixed(4)} pp` } };
+  o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => {
+    const dv = deltaVotos[c.dataIndex];
+    return dv != null && dv > 0 ? ` Aumento ≈ ${kFmt(dv)} votos` : ` 0 votos`;
+  }}};
   upsert("c2", "bar", {labels, datasets:ds3}, o3, esMovil ? [] : [
     { ds:0, text:etqDelta, color:colDelta },
   ]);
@@ -333,10 +367,15 @@ function render(d){
 
   /* ===== Título y pie ===== */
   const a = d.actas || {};
-  const pct = (a.pct && a.pct.length) ? a.pct[a.pct.length-1] : null;
+  const contabilizadas = a.contabilizadas || 0;
+  const total = a.total || 0;
+  const porcentajeActas =
+    (contabilizadas > 0 && total > 0)
+      ? ((contabilizadas / total) * 100).toFixed(1)
+      : null;
   document.getElementById("titulo").textContent =
-    pct != null
-      ? `Elecciones Perú 2026 - Segunda Vuelta - Evolución ONPE al ${pct.toFixed(2)}%`
+    (contabilizadas > 0 && total > 0)
+      ? `Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE al ${porcentajeActas}% (${contabilizadas.toLocaleString("es-PE")}/${total.toLocaleString("es-PE")}) Actas Procesadas`
       : "Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE";
   const credits = ` | Hecho por <a href="https://dennishnf.com" target="_blank" style="color:var(--fg2);text-decoration:underline">Dennis Núñez</a> | <a href="https://github.com/dennishnf/peru2026-electoral-data" target="_blank" style="color:var(--fg2);text-decoration:underline">GitHub Repo</a>`;
   document.getElementById("foot").innerHTML =
@@ -351,9 +390,9 @@ function render(d){
       `<div><b style="color:${colB}">${B}</b> ${f3(sb[li])}%</div>` +
       `<div><b style="color:${colA}">${A}</b> ${f3(sa[li])}%</div>`;
     document.getElementById("cap2").innerHTML =
-      `<b style="color:${colDelta}">${etqDelta}</b>`;
+      `<b style="color:${colDelta}">${etqDelta}</b>`; // etqDelta ya incluye votos
     document.getElementById("cap3").innerHTML =
-      `<b style="color:${colLider}">${f3(diff[li])} pp</b>`;
+      `<b style="color:${colLider}">${diffVotos[li]!=null?kFmt(Math.round(diffVotos[li])):"–"} votos</b>`;
   }
 }
 
@@ -385,7 +424,7 @@ async function cargar(){
 }
 
 cargar();
-setInterval(cargar, 120000);   // refresca cada 2 minutos
+setInterval(cargar, 60000);   // refresca cada 1 minutos
 
 /* Cuando la pestaña vuelve a primer plano (estaba en segundo plano y el
    navegador pausó el temporizador), jala datos al instante sin esperar
