@@ -6,7 +6,7 @@ I built it so I could see how the count changes minute by minute in the days fol
 
 ## Live demo
 
-A live version using a custom domain is available at **[peru2026.dennishnf.com](https://peru2026.dennishnf.com/)** — note that it is only active during the election counting period.
+A live version using a custom domain is available at **[peru2026.dennishnf.com](https://peru2026.dennishnf.com/)**. Note that it is only active during the election counting period.
 
 ## What it shows
 
