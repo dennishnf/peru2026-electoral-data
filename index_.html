@@ -303,6 +303,7 @@ function render(d){
     label:"Diferencia", data:diffVotos,
     borderColor:colLider, borderWidth:2.4,
     pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true,
+    pointBackgroundColor:leaderCol, pointBorderColor:leaderCol,
     fill:"origin", backgroundColor:"rgba(120,134,140,0.16)",
     segment:{ borderColor: ctx => leaderCol[ctx.p1DataIndex] || colLider },
   }];
@@ -314,39 +315,49 @@ function render(d){
     { ds:0, text:`${diffVotos[li]!=null?kFmt(Math.round(diffVotos[li])):""} votos`, color:colLider },
   ]);
 
-  /* ===== Aumento (barras) — se dibuja al medio, en c2 ===== */
-  /* delta en votos absolutos (|votos_a - votos_b| en t[i] vs t[i-1]) */
-  const deltaVotos = new Array(n).fill(null);
+  /* ===== Ventaja ganada por corte (barras) — se dibuja al medio, en c2 =====
+     Métrica unificada con signo:  s = Δ(votos_A − votos_B)
+       · altura  = |s|  → cuántos votos de ventaja se movieron en el corte
+       · color   = signo de s → a favor de quién se movió (A naranja, B verde)
+     A y B comparten la misma fuente (votos), así altura y color no se
+     contradicen. El empate / sin datos queda en gris y sin etiqueta.        */
+  const deltaVotos = new Array(n).fill(null);   // |s|  (altura)
+  const deltaSign  = new Array(n).fill(0);      // +1 = A, -1 = B, 0 = empate
   {
     const vaW = sl(vaF), vbW = sl(vbF);
     for (let i = 1; i < n; i++){
       if (vaW[i]!=null && vbW[i]!=null && vaW[i-1]!=null && vbW[i-1]!=null){
-        const prevDiff = Math.abs(vaW[i-1] - vbW[i-1]);
-        const curDiff  = Math.abs(vaW[i]   - vbW[i]);
-        deltaVotos[i] = Math.round(Math.abs(curDiff - prevDiff));
+        const s = (vaW[i] - vbW[i]) - (vaW[i-1] - vbW[i-1]);
+        deltaVotos[i] = Math.round(Math.abs(s));
+        deltaSign[i]  = s > 0 ? 1 : (s < 0 ? -1 : 0);
       }
     }
   }
 
-  const maxDeltaV = Math.max(1, ...deltaVotos.filter(x=>x!=null));
+  const fillBar = deltaSign.map(s => s > 0 ? colA : (s < 0 ? colB : GRAY));
+  const edgeBar = fillBar;
+
+  const maxDeltaV = Math.max(1, ...deltaVotos.filter(x => x != null));
   const lastDeltaV = deltaVotos[li] != null ? deltaVotos[li] : 0;
   let etqDelta, colDelta;
-  if (lastDeltaV < 1){ etqDelta = `0 votos`; colDelta = GRAY; }
-  else { etqDelta = `${kFmt(lastDeltaV)} votos`; colDelta = deltaCol[li]; }
+  if (lastDeltaV < 1 || deltaSign[li] === 0){ etqDelta = `0 votos`; colDelta = GRAY; }
+  else { etqDelta = `${kFmt(lastDeltaV)} votos`; colDelta = deltaSign[li] > 0 ? colA : colB; }
 
   const ds3 = [{
-    label:"Δ", data:deltaVotos,
-    backgroundColor:deltaCol, borderColor:deltaCol,
+    label:"Ventaja", data:deltaVotos,
+    backgroundColor:fillBar, borderColor:edgeBar,
     borderWidth:0, barPercentage:1.0, categoryPercentage:0.9,
   }];
   const magDV = Math.pow(10, Math.floor(Math.log10(maxDeltaV)));
   const topDV = Math.ceil(maxDeltaV * 1.35 / magDV) * magDV;
-  const o3 = baseOpts("|Aumento| (votos)",
+  const o3 = baseOpts("Ventaja ganada",
     { min:0, max:topDV, ticks:{ color:FG2, callback:kFmt, padding:2 } },
     false, null, PAD_R);
   o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => {
-    const dv = deltaVotos[c.dataIndex];
-    return dv != null && dv > 0 ? ` Aumento ≈ ${kFmt(dv)} votos` : ` 0 votos`;
+    const i = c.dataIndex, dv = deltaVotos[i];
+    if (dv == null || dv < 1 || deltaSign[i] === 0) return ` Sin cambio de ventaja`;
+    const quien = deltaSign[i] > 0 ? A : B;
+    return ` ${quien} ganó ${dv.toLocaleString("es-PE")} votos de ventaja`;
   }}};
   upsert("c2", "bar", {labels, datasets:ds3}, o3, esMovil ? [] : [
     { ds:0, text:etqDelta, color:colDelta },
@@ -361,8 +372,8 @@ function render(d){
     { color:colB, txt:`${B} adelante`, box:true },
   ]);
   legendHTML(document.getElementById("leg2"), [
-    { color:colA, txt:`Subió ${A}`, box:true },
-    { color:colB, txt:`Subió ${B}`, box:true },
+    { color:colA, txt:`Avanzó ${A}`, box:true },
+    { color:colB, txt:`Avanzó ${B}`, box:true },
   ]);
 
   /* ===== Título y pie ===== */

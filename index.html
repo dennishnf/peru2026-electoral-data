@@ -276,9 +276,13 @@ function render(d){
 
   /* ===== Panel 1: % votos válidos ===== */
   const vals = [...sa, ...sb, 50].filter(x => x != null);
-  // Ventana fija ~49.8–50.2; se amplía sola SOLO si los datos se salen de ese rango.
-  let lo = Math.min(49.8, Math.floor(Math.min(...vals) * 10) / 10);
-  let hi = Math.max(50.2, Math.ceil (Math.max(...vals) * 10) / 10);
+  // el eje Y se ajusta al rango real de los datos (con margen) e incluye el 50%
+  const dmin = Math.min(...vals), dmax = Math.max(...vals);
+  const pad = Math.max(0.02, (dmax - dmin) * 0.25);
+  const r3 = x => Math.round(x * 1000) / 1000;
+  const paso = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1].find(s => (dmax - dmin + 2*pad) / s <= 6) || 1;
+  let lo = r3(Math.floor((dmin - pad) / paso) * paso);
+  let hi = r3(Math.ceil ((dmax + pad) / paso) * paso);
   const ds1 = [
     { label:A, data:sa, borderColor:colA, backgroundColor:colA,
       borderWidth:2.4, pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true },
@@ -288,7 +292,7 @@ function render(d){
       borderDash:[6,4], borderWidth:1.3, pointRadius:0, tension:0, fill:false },
   ];
   const o1 = baseOpts("% Votos válidos",
-    { min:lo, max:hi, ticks:{ color:FG2, callback:v=>v.toFixed(2)+"%", padding:2 } }, false, null, PAD_R);
+    { min:lo, max:hi, ticks:{ color:FG2, stepSize:paso, callback:v=>v.toFixed(2)+"%", padding:2 } }, false, null, PAD_R);
   o1.plugins.tooltip = { filter: it => it.dataset.label !== "50%", callbacks:{ title:tipTitle, label:c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(3)}%` } };
   upsert("c1", "line", {labels, datasets:ds1}, o1, esMovil ? [] : [
     { ds:0, text:(sa[li]!=null?sa[li].toFixed(3):"")+"%", color:colA },
