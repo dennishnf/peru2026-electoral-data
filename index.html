@@ -309,7 +309,7 @@ function render(d){
     pointRadius:pr, pointHoverRadius:4, tension:0.15, spanGaps:true,
     pointBackgroundColor:leaderCol, pointBorderColor:leaderCol,
     fill:"origin", backgroundColor:"rgba(120,134,140,0.16)",
-    segment:{ borderColor: ctx => leaderCol[ctx.p1DataIndex] || colLider },
+    segment:{ borderColor: ctx => leaderCol[ctx.p0DataIndex] || colLider },
   }];
   const o2 = baseOpts("Diferencia (votos)",
     { min:0, max:topV, ticks:{ color:FG2, callback:kFmt, padding:2 } },

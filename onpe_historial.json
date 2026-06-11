@@ -37778,5 +37778,805 @@
     "pct_actas": 98.216,
     "total_actas": 92766,
     "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:25:00.397610",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:30:00.347899",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:35:00.616976",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:40:00.901264",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:45:00.665614",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:50:00.496522",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T15:55:00.691110",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:00:00.377006",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:05:00.474025",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:10:00.421799",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:15:00.753424",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:20:00.711916",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:25:00.685106",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:30:00.509202",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:35:00.480155",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:40:00.416600",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:45:00.695210",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:50:00.443356",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T16:55:00.382978",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:00:00.614580",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:05:00.410311",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:10:00.624487",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:15:00.561049",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:20:00.512499",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:25:00.500134",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:30:00.414730",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:35:00.496419",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:40:00.687689",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:45:00.597064",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:50:00.380881",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T17:55:00.673015",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T18:00:00.612815",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T18:05:01.055950",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T18:10:00.335596",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T18:15:00.461604",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032092,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032653,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.216,
+    "total_actas": 92766,
+    "contabilizadas": 91111
+  },
+  {
+    "timestamp": "2026-06-11T18:20:00.470876",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032180,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032765,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.22,
+    "total_actas": 92766,
+    "contabilizadas": 91115
+  },
+  {
+    "timestamp": "2026-06-11T18:25:00.494422",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032216,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032838,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.222,
+    "total_actas": 92766,
+    "contabilizadas": 91117
+  },
+  {
+    "timestamp": "2026-06-11T18:30:00.377939",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032216,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032838,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.222,
+    "total_actas": 92766,
+    "contabilizadas": 91117
+  },
+  {
+    "timestamp": "2026-06-11T18:35:00.630134",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032230,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032899,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.223,
+    "total_actas": 92766,
+    "contabilizadas": 91118
+  },
+  {
+    "timestamp": "2026-06-11T18:40:00.386320",
+    "candidatos": [
+      {
+        "nombre": "JUNTOS POR EL PERÚ",
+        "candidato": "ROBERTO HELBERT SANCHEZ PALOMINO",
+        "votos": 9032230,
+        "porcentaje": 49.998
+      },
+      {
+        "nombre": "FUERZA POPULAR",
+        "candidato": "KEIKO SOFIA FUJIMORI HIGUCHI",
+        "votos": 9032899,
+        "porcentaje": 50.002
+      }
+    ],
+    "pct_actas": 98.223,
+    "total_actas": 92766,
+    "contabilizadas": 91118
   }
 ]
