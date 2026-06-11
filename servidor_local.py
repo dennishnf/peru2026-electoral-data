@@ -9,9 +9,9 @@ navegador.
 
 Uso:
     pip install -r requirements.txt
-    python servidor_local.py
-    python servidor_local.py --intervalo 1
-    python servidor_local.py --port 9000
+    python servidor_local.py            # consulta cada 1 min (por defecto)
+    python servidor_local.py 5          # consulta cada 5 min
+    python servidor_local.py 5 --port 9000
 
 Para una URL publica se usa un tunel de cloudflare:
     cloudflared tunnel run onpe
@@ -195,21 +195,39 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    p = argparse.ArgumentParser(description="Servidor local del tracker ONPE")
-    p.add_argument("--port",      type=int, default=8000)
-    p.add_argument("--intervalo", type=int, default=1,
-                   help="Minutos entre consultas")
+    p = argparse.ArgumentParser(
+        description="Servidor local del tracker ONPE",
+        epilog="Ejemplos:\n"
+               "  python servidor_local.py        -> consulta cada 1 min\n"
+               "  python servidor_local.py 5      -> consulta cada 5 min\n"
+               "  python servidor_local.py 5 --port 9000",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    p.add_argument("intervalo", nargs="?", type=int, default=None,
+                   help="Minutos entre consultas a la ONPE (ej: '5'). Por defecto 1.")
+    p.add_argument("-i", "--intervalo", dest="intervalo_flag", type=int, default=None,
+                   help="Igual que el argumento posicional, en forma de opción (--intervalo 5).")
+    p.add_argument("--port", type=int, default=8000)
     p.add_argument("--historial", default="onpe_historial.json")
     args = p.parse_args()
 
+    # Prioridad: posicional > opción --intervalo > valor por defecto (1)
+    intervalo = args.intervalo
+    if intervalo is None:
+        intervalo = args.intervalo_flag
+    if intervalo is None:
+        intervalo = 1
+    if intervalo <= 0:
+        p.error("el intervalo debe ser un entero positivo (en minutos)")
+
     threading.Thread(
         target=bucle_tracker,
-        args=(args.historial, args.intervalo),
+        args=(args.historial, intervalo),
         daemon=True,
     ).start()
 
     print(f"Servidor en http://localhost:{args.port}  "
-          f"(intervalo {args.intervalo} min)")
+          f"(intervalo {intervalo} min)")
     print("  Ctrl+C para detener.")
     try:
         ThreadingHTTPServer(("0.0.0.0", args.port), Handler).serve_forever()

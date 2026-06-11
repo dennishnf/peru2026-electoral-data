@@ -30,14 +30,20 @@ pip install -r requirements.txt
 python servidor_local.py
 ```
 
-Then open http://localhost:8000 in your browser.
+Then open http://localhost:8000 in your browser. By default it checks the ONPE API once a minute.
 
 Options:
 
 ```
-python servidor_local.py --intervalo 5    # minutes between checks
+python servidor_local.py 5                # minutes between checks (positional)
+python servidor_local.py --intervalo 5    # same thing as a flag (-i also works)
 python servidor_local.py --port 9000      # use another port
+python servidor_local.py 5 --port 9000    # combine them
 ```
+
+The interval is the number of minutes between each query to ONPE. You can pass it
+as a bare number (`python servidor_local.py 5`) or with `--intervalo` / `-i`; if you
+pass nothing it defaults to 1 minute.
 
 The history is saved in onpe_historial.json, so restarting the server does not lose what you already collected.
 
@@ -67,10 +73,10 @@ The data comes from ONPE's public API and its format can change without notice. 
 
 This is how I run the live version on its own address. You need two terminals open at the same time, and the named tunnel and domain set up once beforehand on Cloudflare.
 
-In the first terminal, start the server:
+In the first terminal, start the server (optionally pass the check interval in minutes):
 
 ```
-python servidor_local.py
+python servidor_local.py 5
 ```
 
 In the second terminal, start the named tunnel:
