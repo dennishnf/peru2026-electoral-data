@@ -293,7 +293,7 @@ function render(d){
   ];
   const o1 = baseOpts("% Votos válidos",
     { min:lo, max:hi, ticks:{ color:FG2, stepSize:paso, callback:v=>v.toFixed(2)+"%", padding:2 } }, false, null, PAD_R);
-  o1.plugins.tooltip = { filter: it => it.dataset.label !== "50%", callbacks:{ title:tipTitle, label:c => ` ${c.dataset.label}: ${c.parsed.y?.toFixed(3)}%` } };
+  o1.plugins.tooltip = { filter: it => it.dataset.label !== "50%", itemSort: (a, b) => b.parsed.y - a.parsed.y, callbacks:{ title:tipTitle, label:c => ` ${c.parsed.y?.toFixed(3)}%` } };
   upsert("c1", "line", {labels, datasets:ds1}, o1, esMovil ? [] : [
     { ds:0, text:(sa[li]!=null?sa[li].toFixed(3):"")+"%", color:colA },
     { ds:1, text:(sb[li]!=null?sb[li].toFixed(3):"")+"%", color:colB },
@@ -311,7 +311,7 @@ function render(d){
     fill:"origin", backgroundColor:"rgba(120,134,140,0.16)",
     segment:{ borderColor: ctx => leaderCol[ctx.p1DataIndex] || colLider },
   }];
-  const o2 = baseOpts("|Diferencia| (votos)",
+  const o2 = baseOpts("Diferencia (votos)",
     { min:0, max:topV, ticks:{ color:FG2, callback:kFmt, padding:2 } },
     true, "Hora (UTC-5, hora de Perú)", PAD_R);
   o2.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${kFmt(Math.round(c.parsed.y))} votos` } };
@@ -354,15 +354,10 @@ function render(d){
   }];
   const magDV = Math.pow(10, Math.floor(Math.log10(maxDeltaV)));
   const topDV = Math.ceil(maxDeltaV * 1.35 / magDV) * magDV;
-  const o3 = baseOpts("Ventaja ganada",
+  const o3 = baseOpts("Ventaja ganada (votos)",
     { min:0, max:topDV, ticks:{ color:FG2, callback:kFmt, padding:2 } },
     false, null, PAD_R);
-  o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => {
-    const i = c.dataIndex, dv = deltaVotos[i];
-    if (dv == null || dv < 1 || deltaSign[i] === 0) return ` Sin cambio de ventaja`;
-    const quien = deltaSign[i] > 0 ? A : B;
-    return ` ${quien} ganó ${dv.toLocaleString("es-PE")} votos de ventaja`;
-  }}};
+  o3.plugins.tooltip = { callbacks:{ title:tipTitle, label:c => ` ${kFmt(Math.round(c.parsed.y))} votos` } };
   upsert("c2", "bar", {labels, datasets:ds3}, o3, esMovil ? [] : [
     { ds:0, text:etqDelta, color:colDelta },
   ]);
@@ -402,8 +397,10 @@ function render(d){
   if (esMovil){
     const f3 = x => (x != null ? x.toFixed(3) : "–");
     document.getElementById("cap1").innerHTML =
-      `<div><b style="color:${colB}">${B}</b> ${f3(sb[li])}%</div>` +
-      `<div><b style="color:${colA}">${A}</b> ${f3(sa[li])}%</div>`;
+      [{ nom:A, col:colA, val:sa[li] }, { nom:B, col:colB, val:sb[li] }]
+        .sort((x, y) => (y.val ?? -Infinity) - (x.val ?? -Infinity))
+        .map(r => `<div><b style="color:${r.col}">${r.nom}</b> ${f3(r.val)}%</div>`)
+        .join("");
     document.getElementById("cap2").innerHTML =
       `<b style="color:${colDelta}">${etqDelta}</b>`; // etqDelta ya incluye votos
     document.getElementById("cap3").innerHTML =
