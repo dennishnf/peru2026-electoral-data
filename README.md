@@ -1,6 +1,6 @@
 # ONPE Live Tracker - Peru 2026
 
-A small web page to follow the ONPE vote count for Peru's 2026 presidential runoff in real time. A Python process checks the public count API every few minutes, keeps the history, and serves it as data. The page reads that data and draws how the result moves, right in the browser.
+A lightweight website to follow the ONPE vote count for Peru's 2026 presidential elections in real time. A Python process checks the public count API every few minutes, keeps the history, and serves it as data. The page reads that data and draws how the result moves, right in the browser.
 
 I built it so I could see how the count changes minute by minute in the days following the election, without reloading the official site over and over. It started out as a quick project that I developed in less than an hour.
 
