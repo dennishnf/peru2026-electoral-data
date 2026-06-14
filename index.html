@@ -39,8 +39,8 @@
   @media (max-width:640px){
     .wrap{display:block;height:auto;overflow:visible;padding:10px 10px 8px}
     h1{font-size:15px;margin-bottom:8px}
-    .tabs{gap:6px;margin-bottom:10px}
-    .tab{font-size:12px;padding:5px 10px}
+    .tabs{gap:4px;margin-bottom:10px;flex-wrap:nowrap}
+    .tab{font-size:clamp(9px,2.6vw,12px);padding:5px 6px;white-space:nowrap}
     .p1{height:300px;margin-top:24px} .p2{height:200px} .p3{height:170px}
     .legend{left:76px;top:6px;font-size:11px;line-height:1.45}
     .legend .swatch{width:16px}
@@ -68,6 +68,7 @@
       <button class="tab active" data-v="12h">Últimas 12 h</button>
       <button class="tab"        data-v="24h">Últimas 24 h</button>
       <button class="tab"        data-v="3d">Últimos 3 días</button>
+      <button class="tab"        data-v="todo">Desde captura</button>
     </div>
 
     <div class="panel p1"><div class="legend" id="leg1"></div><canvas id="c1"></canvas></div>
@@ -87,9 +88,10 @@ const TZ = "America/Lima";          // hora de Perú (UTC-5)
 
 /* Vistas disponibles: ventana de tiempo + resolución (minutos por punto) */
 const VISTAS = {
-  "12h": { horas: 12, resMin: 5  },
-  "24h": { horas: 24, resMin: 10 },
-  "3d":  { horas: 72, resMin: 30 },
+  "12h":  { horas: 12,       resMin: 5  },
+  "24h":  { horas: 24,       resMin: 10 },
+  "3d":   { horas: 72,       resMin: 30 },
+  "todo": { horas: Infinity, resMin: 60 },   // todo el historial, 1 punto por hora
 };
 let vistaActual = "12h";
 let ultimoPayload = null;
@@ -163,6 +165,15 @@ function remuestrear(t, sa, sb, va, vb, resMin){
 
 function baseOpts(yTitle, yScale, showX, xTitle, padRight){
   const esMovil = window.innerWidth <= 640;
+  const TICK = esMovil ? 11 : 12;   // tamaño de los NÚMEROS de los ejes (no de los títulos)
+  // eje Y: parte de los valores del panel y se le fija el tamaño de fuente de los ticks
+  const yAxis = Object.assign({
+    grid:{ color:GRID }, border:{ color:GRID },
+    title:{ display:true, text:yTitle, color:FG2, font:{size:12}, padding:{right:4} },
+    ticks:{ padding:2 },
+    afterFit(s){ s.width = 72; },   // ancho fijo => los 3 paneles se alinean
+  }, yScale);
+  yAxis.ticks = Object.assign({ color:FG2, padding:2 }, yAxis.ticks, { font:{ size:TICK } });
   return {
     responsive:true, maintainAspectRatio:false, animation:false,
     events: esMovil ? [] : undefined,   // móvil: sin tooltip al tocar; PC: normal
@@ -171,15 +182,10 @@ function baseOpts(yTitle, yScale, showX, xTitle, padRight){
     scales:{
       x:{
         grid:{ color:GRID }, border:{ color:GRID },
-        ticks:{ display:showX, color:FG2, maxTicksLimit:12, maxRotation:0, autoSkip:true },
+        ticks:{ display:showX, color:FG2, maxTicksLimit:12, maxRotation:0, autoSkip:true, font:{ size:TICK } },
         title:{ display:!!xTitle, text:xTitle||"", color:FG2, font:{size:12} },
       },
-      y:Object.assign({
-        grid:{ color:GRID }, border:{ color:GRID },
-        title:{ display:true, text:yTitle, color:FG2, font:{size:12}, padding:{right:4} },
-        ticks:{ padding:2 },
-        afterFit(s){ s.width = 72; },   // ancho fijo => los 3 paneles se alinean
-      }, yScale),
+      y: yAxis,
     },
     plugins:{ legend:{ display:false } },
   };
