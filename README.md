@@ -82,7 +82,7 @@ python servidor_local.py 5
 In the second terminal, start the named tunnel:
 
 ```
-cloudflared tunnel run peru2026
+cloudflared tunnel run tunnelProjects
 ```
 
 Keep both terminals running. The server answers on port 8000 and the tunnel points peru2026.dennishnf.com to it. If you close either one the site goes down. Once the tunnel and the domain are set up, these two commands are all you need to bring it back up.
