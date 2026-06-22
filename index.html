@@ -387,12 +387,12 @@ function render(d){
   const total = a.total || 0;
   const porcentajeActas =
     (contabilizadas > 0 && total > 0)
-      ? ((contabilizadas / total) * 100).toFixed(1)
+      ? ((contabilizadas / total) * 100).toFixed(2)
       : null;
   document.getElementById("titulo").textContent =
     (contabilizadas > 0 && total > 0)
-      ? `Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE al ${porcentajeActas}% (${contabilizadas.toLocaleString("es-PE")}/${total.toLocaleString("es-PE")}) Actas Procesadas`
-      : "Elecciones Perú 2026 - Segunda Vuelta - Conteo ONPE";
+      ? `Elecciones Perú 2026 - 2da Vuelta - Conteo ONPE al ${porcentajeActas}% (${contabilizadas.toLocaleString("es-PE")}/${total.toLocaleString("es-PE")}) Actas Procesadas`
+      : "Elecciones Perú 2026 - 2da Vuelta - Conteo ONPE";
   const credits = ` | Hecho por <a href="https://dennishnf.com" target="_blank" style="color:var(--fg2);text-decoration:underline">Dennis Núñez</a> | <a href="https://github.com/dennishnf/peru2026-electoral-data" target="_blank" style="color:var(--fg2);text-decoration:underline">GitHub Repo</a>`;
   document.getElementById("foot").innerHTML =
     d.actualizado
